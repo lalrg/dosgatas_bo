@@ -1,0 +1,31 @@
+Products
+- Create Product
+    - name
+    - price
+    - quantity
+- Update product
+- List products
+
+
+Recipes
+- Create Recipe
+    - name
+    - description
+    - products/ quantities
+- Update Recipe
+- List Recipes
+- Delete Recipe
+
+BL
+- Calculate Recipe Cost
+- Calculate Recipe Profit
+- Calculate Recipe Price
+
+Phases:
+React frontend
+Tauri backend
+sqlite integration
+
+
+contracts
+tbd
