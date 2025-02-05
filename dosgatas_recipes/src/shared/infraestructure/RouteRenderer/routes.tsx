@@ -4,8 +4,10 @@ import ProductsList from '../../../sections/products/list';
 import RecipesCreation from '../../../sections/recipes/create';
 import RecipesList from '../../../sections/recipes/list';
 
+export type RouteKeys = 'createProduct' | 'listProduct' | 'createRecipe' | 'listRecipe';
+
 type Routes = {
-    [key: string]: JSX.Element | (() => JSX.Element);
+    [key in RouteKeys]: () => JSX.Element;
 };
 
 const routes: Routes = {

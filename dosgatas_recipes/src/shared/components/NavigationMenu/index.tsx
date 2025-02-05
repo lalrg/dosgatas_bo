@@ -1,41 +1,48 @@
-import React, { useState } from 'react';
+import React, { JSX, useState } from 'react';
 import { CoffeeOutlined, PieChartOutlined, PlusOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
+import { RouteKeys } from '../../infraestructure/RouteRenderer/routes';
+import { useNavigation, useNavigationDispatch } from '../../context/NavigationContext';
 
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = {
+  label: string;
+  key: RouteKeys | string;
+  icon: JSX.Element;
+  children?: MenuItem[];
+}
 
 const items: MenuItem[] = [
   {
-    label: 'Productos',
-    key: 'products',
-    icon: <CoffeeOutlined />,
+    label: 'Recetas',
+    key: 'mainRecipe',
+    icon: <PieChartOutlined />,
     children: [
       {
-        label: 'Nuevo',
-        key: 'newProduct',
+        label: 'Nueva',
+        key: 'createRecipe',
         icon: <PlusOutlined />,
       },
       {
         label: 'Lista',
-        key: 'productsList',
+        key: 'listRecipe',
         icon: <UnorderedListOutlined />,
       },
     ],
   },
   {
-    label: 'Recetas',
-    key: 'recipes',
-    icon: <PieChartOutlined />,
+    label: 'Productos',
+    key: 'mainProduct',
+    icon: <CoffeeOutlined />,
     children: [
       {
-        label: 'Nueva',
-        key: 'newRecipe',
+        label: 'Nuevo',
+        key: 'createProduct',
         icon: <PlusOutlined />,
       },
       {
         label: 'Lista',
-        key: 'recipesList',
+        key: 'listProduct',
         icon: <UnorderedListOutlined />,
       },
     ],
@@ -43,13 +50,14 @@ const items: MenuItem[] = [
 ];
 
 const NavigationMenu: React.FC = () => {
-  const [current, setCurrent] = useState('mail');
+  const navigation = useNavigation();
+  const navigationDispatch = useNavigationDispatch();
 
   const onClick: MenuProps['onClick'] = (e) => {
-    setCurrent(e.key);
+    navigationDispatch(e.key as RouteKeys);
   };
 
-  return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />;
+  return <Menu onClick={onClick} selectedKeys={[navigation]} mode="horizontal" items={items} />;
 };
 
 export default NavigationMenu;

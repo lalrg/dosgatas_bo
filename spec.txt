@@ -1,8 +1,8 @@
 Products
 - Create Product
     - name
+    - description
     - price
-    - quantity
 - Update product
 - List products
 
@@ -11,7 +11,7 @@ Recipes
 - Create Recipe
     - name
     - description
-    - products/ quantities
+    - products/ quantities(percentage of the package)
 - Update Recipe
 - List Recipes
 - Delete Recipe

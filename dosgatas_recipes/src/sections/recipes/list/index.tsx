@@ -1,9 +1,11 @@
+import { Table } from "antd";
+import { columns, DataType } from "./config";
+import { recipesMock } from "../../../misc/mock/recipes";
+
 const RecipesList = () => {
 
   return (
-    <div>
-        Recipes list
-    </div>
+    <Table<DataType> columns={columns} dataSource={recipesMock}/>
   );
 }
 
