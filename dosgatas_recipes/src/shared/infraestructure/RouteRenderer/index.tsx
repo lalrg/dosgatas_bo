@@ -1,10 +1,10 @@
 import { useNavigation } from "../../context/NavigationContext";
 import routes from "./routes";
-
+import './styles.css';
 
 const RouteRenderer: React.FC = () => {
     const navigation =  useNavigation();
-    return routes[navigation]();
+    return <div className="renderer">{routes[navigation]()}</div>
 }
 
 

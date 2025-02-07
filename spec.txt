@@ -12,14 +12,11 @@ Recipes
     - name
     - description
     - products/ quantities(percentage of the package)
+    - profit margin
 - Update Recipe
 - List Recipes
 - Delete Recipe
 
-BL
-- Calculate Recipe Cost
-- Calculate Recipe Profit
-- Calculate Recipe Price
 
 Phases:
 React frontend

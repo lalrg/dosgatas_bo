@@ -1,23 +1,37 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Select, Space } from 'antd';
+import { Button, Flex, Form, Input, InputNumber, Select, Space } from 'antd';
 import { productsMock } from '../../../misc/mock/products';
+import { IngredientRow, ProductsList } from '../components/IngredientRow';
+import { SelectedProduct, usePriceCalculation } from '../hooks/usePriceCalculation';
 
 const onFinish = (values: any) => {
   console.log('Received values of form:', values);
 };
 
 const CreateRecipe: React.FC = () => {
-  const productsList = useMemo(
-    () => productsMock.map(({name, key}) => ({
+  const productsList = useMemo<ProductsList[]>(
+    () => productsMock.map<ProductsList>(({name, key, cost}) => ({
           label: name,
-          value: key
+          value: key,
+          cost
         })
     ), [productsMock]);
+    const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>([]);
+    const [margin, setMargin] = useState<number>(0);
+    const [price, cost] = usePriceCalculation(selectedProducts, margin);
+
+    const onValuesChange = (changedFields: any, allFields: any) => {
+      if(allFields.products && allFields.products.length > 0) {
+        setSelectedProducts(allFields.products as SelectedProduct[]);
+      }
+      setMargin(allFields.margin);
+      console.log(changedFields, allFields);
+    };
 
   return(
     <Form
-      name="dynamic_form_nest_item"
+      name="recipe_create"
       onFinish={onFinish}
       autoComplete="off"
       labelCol= {{
@@ -28,10 +42,14 @@ const CreateRecipe: React.FC = () => {
         xs: { span: 24 },
         sm: { span: 14 },
       }}
+      onValuesChange={onValuesChange}
+      initialValues={{
+        margin: 60
+      }}
     >
       <Form.Item
         label="Nombre"
-        name="name"
+        name={"name"}
         rules={[{ required: true, message: 'Nombre del producto!' }]}
       >
         <Input />
@@ -43,36 +61,31 @@ const CreateRecipe: React.FC = () => {
       >
         <Input />
       </Form.Item>
+      <Form.Item
+        label="Margen de ganancias"
+        name="margin"
+        rules={[{ required: true, message: 'Porcentaje de ganancias' }]}
+      >
+        <InputNumber />
+      </Form.Item>
+      <div>
+        Precio actual:{price}
+      </div>
+      <div>
+        Costo:{cost}
+      </div>
+      <div>
+        Ganancia:{price-cost}
+      </div>
       <Form.List name="products">
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  {...restField}
-                  name={[name, 'product']}
-                  label="Producto"
-                  rules={[{ required: true, message: 'Nombre del producto' }]}
-                >
-                  <Select
-                    style={{ width: 120 }}
-                    options={productsList}
-                  />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  label="cantidad"
-                  name={[name, 'quantity']}
-                  rules={[{ required: true, message: 'Porcentaje del paquete' }]}
-                >
-                  <Input placeholder="Cantidad" />
-                </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
+                <IngredientRow key={key} name={name} productsList={productsList} restField={restField} remove={remove} />
             ))}
             <Form.Item>
               <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                Add field
+                Agregar ingrediente
               </Button>
             </Form.Item>
           </>
@@ -80,7 +93,7 @@ const CreateRecipe: React.FC = () => {
       </Form.List>
       <Form.Item>
         <Button type="primary" htmlType="submit">
-          Submit
+          Crear
         </Button>
       </Form.Item>
     </Form>)
