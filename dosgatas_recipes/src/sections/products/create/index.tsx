@@ -1,6 +1,6 @@
 import React from 'react';
 import type { FormProps } from 'antd';
-import { Button, InputNumber, Form, Input } from 'antd';
+import { Button, InputNumber, Form, Input, Row, Col } from 'antd';
 
 type FieldType = {
   name?: string;
@@ -22,43 +22,39 @@ const CreateProduct: React.FC = () => (
     onFinish={onFinish}
     onFinishFailed={onFinishFailed}
     autoComplete="off"
-    labelCol= {{
-      xs: { span: 24 },
-      sm: { span: 6 },
-    }}
-    wrapperCol= {{
-      xs: { span: 24 },
-      sm: { span: 14 },
-    }}
   >
-    <Form.Item<FieldType>
-      label="Nombre"
-      name="name"
-      rules={[{ required: true, message: 'Nombre del producto!' }]}
-    >
-      <Input />
-    </Form.Item>
-    <Form.Item<FieldType>
-      label="Descripcion"
-      name="description"
-      rules={[{ required: true, message: 'Descripcion del producto!' }]}
-    >
-      <Input />
-    </Form.Item>
-    <Form.Item<FieldType>
-      label="Costo"
-      name="cost"
-      rules={[{ required: true, message: 'Costo del producto!' }]}
-    >
-      <InputNumber />
-    </Form.Item>
+    <Row align={"middle"} justify={"center"}>
+      <Col>
+        <Form.Item<FieldType>
+          label="Nombre"
+          name="name"
+          rules={[{ required: true, message: 'Nombre del producto!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item<FieldType>
+          label="Descripcion"
+          name="description"
+          rules={[{ required: true, message: 'Descripcion del producto!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item<FieldType>
+          label="Costo"
+          name="cost"
+          rules={[{ required: true, message: 'Costo del producto!' }]}
+        >
+          <InputNumber />
+        </Form.Item>
 
 
-    <Form.Item label={null}>
-      <Button type="primary" htmlType="submit">
-        Crear
-      </Button>
-    </Form.Item>
+        <Form.Item label={null}>
+          <Button type="primary" htmlType="submit">
+            Crear
+          </Button>
+        </Form.Item>
+      </Col>
+    </Row>
   </Form>
 );
 

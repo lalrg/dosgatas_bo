@@ -18,9 +18,9 @@ function App() {
           // algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
         }}
       >
-      <Title style={{textAlign: 'center'}}>Dos Gatas</Title>
-      <NavigationMenu />
-      <RouteRenderer />
+        <Title style={{textAlign: 'center'}}>Dos Gatas</Title>
+        <NavigationMenu />
+        <RouteRenderer />
       </ConfigProvider>
     </ NavigationProvider>
   );

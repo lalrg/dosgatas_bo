@@ -22,8 +22,6 @@ export const IngredientRow: React.FC<IngredientRowProps> = ({
         {...restField}
         name={[name, 'product']}
         label="Producto"
-        labelCol={{ span: 24 }}
-        wrapperCol={{ span: 24 }}
         rules={[{ required: true, message: 'Nombre del producto' }]}
       >
         <Select
@@ -36,8 +34,6 @@ export const IngredientRow: React.FC<IngredientRowProps> = ({
       <Form.Item
         {...restField}
         label="cantidad"
-        labelCol={{ span: 24 }}
-        wrapperCol={{ span: 24 }}
         name={[name, 'quantity']}
         rules={[{ required: true, message: 'Porcentaje del paquete' }]}
       >

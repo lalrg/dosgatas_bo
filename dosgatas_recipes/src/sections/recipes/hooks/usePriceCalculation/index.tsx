@@ -1,5 +1,6 @@
-import { useMemo } from "react";
-import { productsMock } from "../../../../misc/mock/products";
+import { useEffect, useMemo, useState } from "react";
+import { DataType } from "../../../products/list/config";
+import { invoke } from "@tauri-apps/api/core";
 
 export type SelectedProduct = {
   product: number | null;
@@ -14,15 +15,20 @@ export const usePriceCalculation = (
   selectedProducts: SelectedProduct[],
   margin: number
 ) => {
+  const [products, setProducts] = useState<DataType[]>([]);
+  useEffect(() => {
+    invoke('get_products').then((message) => setProducts(message as DataType[]));
+  });
+  
   const productsList = useMemo<ProductsPrices>(
-    () => productsMock.reduce<ProductsPrices>(
+    () => products.reduce<ProductsPrices>(
       (acc, { key, cost }) => {
         acc[key] = cost;
         return acc;
       },
       {} as ProductsPrices
     ),
-    [productsMock]
+    [products]
   );
 
   const totalCost = useMemo(

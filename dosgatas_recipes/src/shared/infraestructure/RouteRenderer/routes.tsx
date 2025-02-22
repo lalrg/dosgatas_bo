@@ -4,7 +4,7 @@ import ProductsList from '../../../sections/products/list';
 import RecipesCreation from '../../../sections/recipes/create';
 import RecipesList from '../../../sections/recipes/list';
 
-export type RouteKeys = 'createProduct' | 'listProduct' | 'createRecipe' | 'listRecipe';
+export type RouteKeys = 'createProduct' | 'listProduct' | 'createRecipe' | 'listRecipe' | 'editRecipe' | 'editProduct';
 
 type Routes = {
     [key in RouteKeys]: () => JSX.Element;
@@ -15,6 +15,8 @@ const routes: Routes = {
     listProduct: () => renderComponent(ProductsList, {}),
     createRecipe: () => renderComponent(RecipesCreation, {}),
     listRecipe: () => renderComponent(RecipesList, {}),
+    editProduct: () => renderComponent(ProductsCreation, {}),
+    editRecipe: () => renderComponent(RecipesCreation, {}),
 };
 
 function renderComponent(Component: React.FC, props: object): JSX.Element {
