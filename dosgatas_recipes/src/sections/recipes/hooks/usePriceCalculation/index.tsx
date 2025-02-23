@@ -3,7 +3,7 @@ import { DataType } from "../../../products/list/config";
 import { invoke } from "@tauri-apps/api/core";
 
 export type SelectedProduct = {
-  product: number | null;
+  key: number | null;
   quantity: number | null;
 }
 
@@ -38,10 +38,10 @@ export const usePriceCalculation = (
       }
   
       return selectedProducts.reduce((acc, current) => {
-        if (!current?.product || !current?.quantity) {
+        if (!current?.key || !current?.quantity) {
           return acc;
         }
-        return acc + (productsList[current.product] * current.quantity);
+        return acc + (productsList[current.key] * current.quantity);
       }, 0);
     },
     [selectedProducts, productsList]

@@ -31,6 +31,8 @@ const CreateProduct: React.FC = () => {
           messageApi.error('Error al cargar el producto');
           setIsLoading(false);
         });
+    } else {
+      form.resetFields();
     }
   }, [navigation.id, form, messageApi]);
 

@@ -1,16 +1,23 @@
-import { Table } from "antd";
+import { Table, Spin } from "antd";
 import { columns, DataType } from "./config";
 import { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import { getRecipes } from '../../../api/recipe';
 
 const RecipesList = () => {
   const [recipes, setRecipes] = useState<DataType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
-    invoke('get_recipes').then((message) => setRecipes(message as DataType[]));    
-  });
+    getRecipes().then((data) => {
+      setRecipes(data as DataType[]);
+      setLoading(false);
+    });
+  }, []);
 
   return (
-    <Table<DataType> columns={columns} dataSource={recipes}/>
+    <Spin spinning={loading}>
+      <Table<DataType> columns={columns} dataSource={recipes} />
+    </Spin>
   );
 }
 
