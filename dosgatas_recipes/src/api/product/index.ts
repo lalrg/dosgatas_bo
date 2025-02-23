@@ -1,3 +1,5 @@
+import { invoke } from '@tauri-apps/api/core';
+
 export type Product = {
   name: string;
   description: string;
@@ -37,4 +39,8 @@ const deleteProduct = async (id: number): Promise<void> => {
   });
 };
 
-export { getProduct, createProduct, updateProduct, deleteProduct };
+const getProducts = async (): Promise<Product[]> => {
+  return invoke<Product[]>('get_products').then((message) => message);
+};
+
+export { getProduct, createProduct, updateProduct, deleteProduct, getProducts };
