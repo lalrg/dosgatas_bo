@@ -1,16 +1,23 @@
-import { Table } from "antd";
+import { Table, Spin } from "antd";
 import { columns, DataType } from "./config";
-import { invoke } from '@tauri-apps/api/core';
 import { useEffect, useState } from "react";
+import { getProducts } from '../../../api/product';
 
 const ProductsList = () => {
   const [products, setProducts] = useState<DataType[]>([]);
-  useEffect(() =>{
-    invoke('get_products').then((message) => setProducts(message as DataType[]));
-  });
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    getProducts().then((data) => {
+      setProducts(data as DataType[]);
+      setLoading(false);
+    });
+  }, []);
 
   return (
-    <Table<DataType> columns={columns} dataSource={products}/>
+    <Spin spinning={loading}>
+      <Table<DataType> columns={columns} dataSource={products} />
+    </Spin>
   );
 }
 
