@@ -1,4 +1,5 @@
 import { TableProps, Space } from "antd";
+import { useNavigationDispatch } from "../../../shared/context/NavigationContext";
 
 export type DataType = {
   key: number;
@@ -27,10 +28,18 @@ export const columns: TableProps<DataType>['columns'] = [
     title: 'Acciones',
     key: 'action',
     render: (_, record) => (
-      <Space size="middle">
-        <a>Ver</a>
-        <a>Eliminar</a>
-      </Space>
+      Options(record.key)
     ),
   }
 ];
+
+const Options = (id: number) => {
+  const navigationDispatch = useNavigationDispatch();
+
+  return (
+    <Space size="middle">
+      <a onClick={() => navigationDispatch({ route: 'editProduct', id })}>Ver</a>
+      <a>Eliminar</a>
+    </Space>
+  );
+}

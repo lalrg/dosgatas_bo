@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { FormProps } from 'antd';
 import { Button, InputNumber, Form, Input, Row, Col, message } from 'antd';
-import { useNavigationDispatch } from '../../../shared/context/NavigationContext';
+import { useNavigation, useNavigationDispatch } from '../../../shared/context/NavigationContext';
 
 type FieldType = {
   name?: string;
@@ -14,6 +14,7 @@ const CreateProduct: React.FC = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const navigationDispatch = useNavigationDispatch();
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (isSubmitted) {
@@ -42,7 +43,6 @@ const CreateProduct: React.FC = () => {
 
   return (
     <>
-      {contextHolder}
       <Form
         name="createProduct"
         onFinish={onFinish}
