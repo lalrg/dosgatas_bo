@@ -7,7 +7,7 @@ import RecipesList from '../../../sections/recipes/list';
 export type RouteKeys = 'createProduct' | 'listProduct' | 'createRecipe' | 'listRecipe' | 'editRecipe' | 'editProduct';
 
 type Routes = {
-    [key in RouteKeys]: () => JSX.Element;
+    [key in RouteKeys]: (id?: number) => JSX.Element;
 };
 
 const routes: Routes = {
@@ -15,8 +15,8 @@ const routes: Routes = {
     listProduct: () => renderComponent(ProductsList, {}),
     createRecipe: () => renderComponent(RecipesCreation, {}),
     listRecipe: () => renderComponent(RecipesList, {}),
-    editProduct: () => renderComponent(ProductsCreation, {}),
-    editRecipe: () => renderComponent(RecipesCreation, {}),
+    editProduct: (id) => renderComponent(ProductsCreation, { id }),
+    editRecipe: (id) => renderComponent(RecipesCreation, { id }),
 };
 
 function renderComponent(Component: React.FC, props: object): JSX.Element {

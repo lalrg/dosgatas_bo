@@ -54,10 +54,10 @@ const NavigationMenu: React.FC = () => {
   const navigationDispatch = useNavigationDispatch();
 
   const onClick: MenuProps['onClick'] = (e) => {
-    navigationDispatch(e.key as RouteKeys);
+    navigationDispatch({ route: e.key as RouteKeys });
   };
 
-  return <Menu onClick={onClick} selectedKeys={[navigation]} mode="horizontal" items={items} />;
+  return <Menu onClick={onClick} selectedKeys={[navigation.route]} mode="horizontal" items={items} />;
 };
 
 export default NavigationMenu;

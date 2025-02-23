@@ -4,8 +4,7 @@ import './styles.css';
 
 const RouteRenderer: React.FC = () => {
     const navigation =  useNavigation();
-    return <div className="renderer">{routes[navigation]()}</div>
+    return <div className="renderer">{routes[navigation.route](navigation.id)}</div>
 }
-
 
 export default RouteRenderer;

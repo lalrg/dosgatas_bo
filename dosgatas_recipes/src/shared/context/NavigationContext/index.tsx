@@ -1,22 +1,28 @@
 import { createContext, ReactNode, useContext, useReducer } from "react";
 import { RouteKeys } from '../../../shared/infraestructure/RouteRenderer/routes';
 
-interface NavigationProviderProps {
+type NavigationProviderProps = {
     children: ReactNode;
 }
 
-
-const NavigationReducer = (_: RouteKeys, value: RouteKeys) => { 
-    return value;
+type NavigationContextType = {
+    route: RouteKeys;
+    id?: number;
 }
 
-const NavigationContext = createContext<RouteKeys>('listRecipe');
-const NavigationDispatchContext = createContext<React.Dispatch<RouteKeys>>(()=> {});
+const defaultRoute: NavigationContextType = { route: 'listRecipe' }
+
+const NavigationReducer = (_: NavigationContextType, value: NavigationContextType) => { 
+    return { ...value };
+}
+
+const NavigationContext = createContext<NavigationContextType>(defaultRoute);
+const NavigationDispatchContext = createContext<React.Dispatch<NavigationContextType>>(()=> {});
 
 export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => { 
     const [route, dispatch] = useReducer(
         NavigationReducer, 
-        'listRecipe'
+        defaultRoute
     );
 
     return (
