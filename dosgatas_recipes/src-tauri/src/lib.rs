@@ -1,9 +1,12 @@
 use sea_orm::{Database, DatabaseConnection};
+use sea_orm_migration::MigratorTrait;
 use std::sync::Mutex;
 use tauri::Manager;
 
 mod features;
+mod migrations;
 
+use migrations::Migrator;
 use features::user as userFeatures;
 use features::recipe as recipeFeatures;
 
@@ -24,6 +27,10 @@ pub fn run() {
       let handle = app.handle().clone();
       tauri::async_runtime::spawn(async move {
         let db = Database::connect(db_url).await.expect("Database connection failed");
+        
+        // Run migrations
+        Migrator::up(&db, None).await.expect("Migration failed");
+
         handle.manage(AppState { db: Mutex::new(db) });
       });
       Ok(())
