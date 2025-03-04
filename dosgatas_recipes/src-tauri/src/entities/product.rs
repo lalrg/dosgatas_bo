@@ -6,7 +6,7 @@ use sea_orm::entity::prelude::*;
 #[sea_orm(table_name = "product")]
 pub struct Model {
     #[sea_orm(primary_key)]
-    pub id: Option<i32>,
+    pub id: u32,
     #[sea_orm(column_type = "Text")]
     pub name: String,
     #[sea_orm(column_type = "Text", nullable)]
@@ -23,6 +23,15 @@ pub enum Relation {
 impl Related<super::recipe_product::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::RecipeProduct.def()
+    }
+}
+
+impl Related<super::recipe::Entity> for Entity {
+    fn to() -> RelationDef {
+        super::recipe_product::Relation::Recipe.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::recipe_product::Relation::Product.def().rev())
     }
 }
 

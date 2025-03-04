@@ -4,9 +4,10 @@ use std::sync::Mutex;
 use tauri::Manager;
 
 mod features;
-mod migrations;
+mod migration;
+mod entities;
 
-use migrations::Migrator;
+use migration::Migrator;
 use features::user as userFeatures;
 use features::recipe as recipeFeatures;
 

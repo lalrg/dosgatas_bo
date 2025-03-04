@@ -5,9 +5,11 @@ use sea_orm::entity::prelude::*;
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
 #[sea_orm(table_name = "recipe_product")]
 pub struct Model {
-    pub recipe_id: i32,
-    pub product_id: i32,
-    pub quantity: i32,
+    #[sea_orm(primary_key, auto_increment = false)]
+    pub recipe_id: u32,
+    #[sea_orm(primary_key, auto_increment = false)]
+    pub product_id: u32,
+    pub quantity: u32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

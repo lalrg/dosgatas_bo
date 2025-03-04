@@ -40,6 +40,7 @@ impl MigrationTrait for Migration {
                     recipe_id INTEGER NOT NULL,
                     product_id INTEGER NOT NULL,
                     quantity INTEGER NOT NULL,
+                    PRIMARY KEY (recipe_id, product_id),
                     FOREIGN KEY (recipe_id) REFERENCES recipe(id),
                     FOREIGN KEY (product_id) REFERENCES product(id)
                 );
