@@ -1,5 +1,5 @@
+use sea_orm::Statement;
 use sea_orm_migration::prelude::*;
-use sea_orm::{DatabaseConnection, Statement};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -50,7 +50,7 @@ impl MigrationTrait for Migration {
                 (24, 'Leche Evaporada Nestle 315g', 'Leche evaporada sin azúcar', 1750.0),
                 (25, 'Whip Topping Richs 907g', 'Crema vegetal para batir', 4500.0),
                 (26, 'Crema Chantilly Dos Pinos 1L', 'Crema batida lista para usar', 5200.0);
-                "#
+                "#,
             )
             .await?;
         }
