@@ -8,8 +8,8 @@ mod entities;
 mod features;
 mod migration;
 
+use features::product as productFeatures;
 use features::recipe as recipeFeatures;
-use features::user as userFeatures;
 use migration::Migrator;
 
 pub struct AppState {
@@ -40,7 +40,7 @@ pub fn run() {
         })
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            userFeatures::get_products,
+            productFeatures::get_products,
             recipeFeatures::get_recipes,
         ])
         .run(tauri::generate_context!())

@@ -44,7 +44,7 @@ impl MigrationTrait for Migration {
                 (18, 'Hojaldres', 'Bollos de hojaldre crujiente.'),
                 (19, 'Tarta de Chocolate', 'Tarta con varias capas de chocolate.'),
                 (20, 'Bollos de Canela', 'Bollos enrollados con canela y azúcar.');
-                "#
+                "#,
             )
             .await?;
         }

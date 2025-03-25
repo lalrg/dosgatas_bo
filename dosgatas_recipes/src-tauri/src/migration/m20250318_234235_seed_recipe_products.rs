@@ -124,8 +124,9 @@ impl MigrationTrait for Migration {
                 (20, 20, 3),
                 (20, 21, 1),
                 (20, 22, 2);
-                "#
-            ).await?;
+                "#,
+            )
+            .await?;
         }
 
         Ok(())
