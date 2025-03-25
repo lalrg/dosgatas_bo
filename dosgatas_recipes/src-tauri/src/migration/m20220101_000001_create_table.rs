@@ -14,7 +14,7 @@ impl MigrationTrait for Migration {
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL,
                     description TEXT,
-                    price DECIMAL NOT NULL
+                    price REAL NOT NULL
                 );
                 "#,
         )

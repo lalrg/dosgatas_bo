@@ -1,6 +1,7 @@
+use tokio::sync::Mutex;
+
 use sea_orm::{Database, DatabaseConnection};
 use sea_orm_migration::MigratorTrait;
-use std::sync::Mutex;
 use tauri::Manager;
 
 mod entities;
