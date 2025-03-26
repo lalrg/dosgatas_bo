@@ -9,22 +9,7 @@ export type Recipe = {
 };
 
 const getRecipe = async (id: number): Promise<Recipe> => {
-  console.log(id);
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ 
-        key: id,
-        name: 'Mock Recipe', 
-        description: 'This is a mock recipe', 
-        margin: 20, 
-        products: [
-          { key: 1, quantity: 2 },
-          { key: 2, quantity: 3 },
-          { key: 3, quantity: 1 }
-        ] 
-      });
-    }, 500);
-  });
+  return invoke<Recipe>('get_single_recipe', { id }).then((message) => message);
 };
 
 const createRecipe = async (recipe: Recipe): Promise<Recipe> => {

@@ -40,8 +40,13 @@ pub fn run() {
         })
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
+
             productFeatures::get_products,
+            productFeatures::get_single_product,
+
             recipeFeatures::get_recipes,
+            recipeFeatures::get_single_recipe,
+
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

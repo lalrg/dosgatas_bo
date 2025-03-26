@@ -8,11 +8,7 @@ export type Product = {
 };
 
 const getProduct = async (id: number): Promise<Product> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ name: 'product', description: 'description', cost: 100 });
-    }, 500);
-  });
+  return invoke<Product>('get_single_product', { id }).then((message) => message);
 };
 
 const createProduct = async (product: Product): Promise<Product> => {

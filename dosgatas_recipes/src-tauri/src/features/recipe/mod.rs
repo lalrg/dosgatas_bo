@@ -1,7 +1,13 @@
 use crate::entities::prelude::Recipe as RecipeEntity;
+use crate::entities::prelude::Product as ProductEntity;
+use crate::entities::prelude::RecipeProduct;
+use crate::entities::recipe_product;
+use sea_orm::ColumnTrait;
+use sea_orm::QueryFilter;
+use sea_orm::QuerySelect;
 use tauri::State;
 use serde::Serialize;
-use sea_orm::EntityTrait;
+use sea_orm::{EntityTrait, RelationTrait, JoinType};
 
 use crate::AppState;
 
@@ -10,6 +16,20 @@ pub struct Recipe {
     pub key: u32,
     pub name: String,
     pub description: String,
+}
+
+#[derive(Serialize)]
+pub struct ProductRecipe {
+    pub key: u32,
+    pub quantity: f32
+}
+
+#[derive(Serialize)]
+pub struct RecipeDetail {
+    pub key: u32,
+    pub name: String,
+    pub description: String,
+    pub products: Vec<ProductRecipe>
 }
 
 #[tauri::command]
@@ -29,4 +49,36 @@ pub async fn get_recipes(state: State<'_, AppState>) -> Result<Vec<Recipe>, Stri
             description: r.description.unwrap_or_default(),
         })
         .collect())
+}
+
+#[tauri::command]
+pub async fn get_single_recipe(state: State<'_, AppState>, id: u32) -> Result<RecipeDetail, String> {
+    let db = state.db.lock().await;
+
+    let recipe = RecipeEntity::find_by_id(id)
+        .one(&*db)
+        .await
+        .map_err(|err| err.to_string())?
+        .ok_or_else(|| "Recipe not found".to_string())?;
+
+    // Get products with their quantities through the junction table
+    let products_with_quantities = RecipeProduct::find()
+        .filter(recipe_product::Column::RecipeId.eq(id))
+        .join(JoinType::InnerJoin, recipe_product::Relation::Product.def())
+        .all(&*db)
+        .await
+        .map_err(|err| err.to_string())?;
+
+    Ok(RecipeDetail {
+        key: recipe.id,
+        name: recipe.name,
+        description: recipe.description.unwrap_or_default(),
+        products: products_with_quantities
+            .into_iter()
+            .map(|rp| ProductRecipe {
+                key: rp.product_id,
+                quantity: rp.quantity as f32,
+            })
+            .collect(),
+    })
 }

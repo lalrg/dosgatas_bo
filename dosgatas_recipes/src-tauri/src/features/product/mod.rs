@@ -32,3 +32,21 @@ pub async fn get_products(state: State<'_, AppState>) -> Result<Vec<Product>, St
         })
         .collect())
 }
+
+#[tauri::command]
+pub async fn get_single_product(state: State<'_, AppState>, id: u32) -> Result<Product, String> {
+    let db = state.db.lock().await;
+
+    let product = ProductEntity::find_by_id(id)
+        .one(&*db)
+        .await
+        .map_err(|err| err.to_string())?
+        .ok_or_else(|| "Product not found".to_string())?;
+
+    Ok(Product {
+        key: product.id,
+        name: product.name,
+        description: product.description.unwrap_or_default(),
+        cost: product.price.to_f32().unwrap_or_default(),
+    })
+}
