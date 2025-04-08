@@ -9,7 +9,7 @@ export type Recipe = {
 };
 
 const getRecipe = async (id: number): Promise<Recipe> => {
-  return invoke<Recipe>('get_single_recipe', { id }).then((message) => message);
+  return invoke<Recipe>('get_single_recipe', { id });
 };
 
 const createRecipe = async (recipe: Recipe): Promise<Recipe> => {
@@ -32,12 +32,7 @@ const updateRecipe = async (id: number, recipe: Recipe): Promise<Recipe> => {
 };
 
 const deleteRecipe = async (id: number): Promise<void> => {
-  console.log(id);
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 500);
-  });
+  return invoke('delete_recipe', {id});
 };
 
 const getRecipes = async (): Promise<Recipe[]> => {

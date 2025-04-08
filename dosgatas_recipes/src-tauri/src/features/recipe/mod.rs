@@ -1,6 +1,6 @@
 use crate::entities::prelude::Recipe as RecipeEntity;
-use crate::entities::prelude::Product as ProductEntity;
 use crate::entities::prelude::RecipeProduct;
+use crate::entities::recipe_product as recipe_product_entity;
 use crate::entities::recipe_product;
 use sea_orm::ColumnTrait;
 use sea_orm::QueryFilter;
@@ -81,4 +81,24 @@ pub async fn get_single_recipe(state: State<'_, AppState>, id: u32) -> Result<Re
             })
             .collect(),
     })
+}
+
+#[tauri::command]
+pub async fn delete_recipe(state: State<'_,AppState>, id: u32) -> Result<(), String> {
+    let db = state.db.lock().await;
+
+    RecipeProduct::delete_many()
+        .filter(recipe_product_entity::Column::RecipeId.eq(id))
+        .exec(&*db)
+        .await
+        .map_err(|err| err.to_string())?;
+
+
+    // Delete the recipe
+    RecipeEntity::delete_by_id(id)
+        .exec(&*db)
+        .await
+        .map_err(|err| err.to_string())?;
+
+    Ok(())
 }
