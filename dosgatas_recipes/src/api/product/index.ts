@@ -33,11 +33,7 @@ const updateProduct = async (id: number, product: Product): Promise<Product> => 
 };
 
 const deleteProduct = async (id: number): Promise<void> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 500);
-  });
+  return invoke('delete_product', { id });
 };
 
 const getProducts = async (): Promise<Product[]> => {

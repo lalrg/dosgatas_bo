@@ -63,11 +63,3 @@ impl MigrationTrait for Migration {
         Ok(())
     }
 }
-
-#[derive(DeriveIden)]
-enum Post {
-    Table = 0,
-    Id = 1,
-    Title = 2,
-    Text = 3,
-}

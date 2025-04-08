@@ -7,3 +7,25 @@ html, body {
 #root {
   padding: 24px;
 }
+
+/* Use AntD's dark theme classes */
+.ant-notification-notice {
+  background-color: #141414 !important;
+  border-radius: 8px !important;  /* Match AntD's default border radius */
+}
+
+.ant-notification-notice-message {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.ant-notification-notice-description {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.ant-btn-primary {
+  background-color: #1890ff;
+}
+
+.ant-notification-notice-icon {
+  color: #faad14;
+}
