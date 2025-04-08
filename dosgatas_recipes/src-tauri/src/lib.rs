@@ -43,10 +43,12 @@ pub fn run() {
 
             productFeatures::get_products,
             productFeatures::get_single_product,
+            productFeatures::delete_product,
+            productFeatures::product_is_in_recipes,
 
             recipeFeatures::get_recipes,
             recipeFeatures::get_single_recipe,
-            recipeFeatures::delete_recipe
+            recipeFeatures::delete_recipe,
 
         ])
         .run(tauri::generate_context!())

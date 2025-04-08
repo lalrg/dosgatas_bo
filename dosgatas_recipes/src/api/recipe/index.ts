@@ -13,7 +13,6 @@ const getRecipe = async (id: number): Promise<Recipe> => {
 };
 
 const createRecipe = async (recipe: Recipe): Promise<Recipe> => {
-  console.log(recipe);
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({ ...recipe, key: Math.floor(Math.random() * 1000) });
@@ -22,8 +21,6 @@ const createRecipe = async (recipe: Recipe): Promise<Recipe> => {
 };
 
 const updateRecipe = async (id: number, recipe: Recipe): Promise<Recipe> => {
-  console.log(id);
-  console.log(recipe);
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({ ...recipe, key: id });

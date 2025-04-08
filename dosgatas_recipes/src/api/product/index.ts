@@ -7,6 +7,11 @@ export type Product = {
   id?: number;
 };
 
+export type ProductUsage = {
+  is_used: boolean;
+  recipe_names: string[];
+};
+
 const getProduct = async (id: number): Promise<Product> => {
   return invoke<Product>('get_single_product', { id }).then((message) => message);
 };
@@ -39,4 +44,15 @@ const getProducts = async (): Promise<Product[]> => {
   return invoke<Product[]>('get_products').then((message) => message);
 };
 
-export { getProduct, createProduct, updateProduct, deleteProduct, getProducts };
+const checkProductUsage = async (id: number): Promise<ProductUsage> => {
+  return invoke<ProductUsage>('product_is_in_recipes', { id });
+};
+
+export { 
+  getProduct, 
+  createProduct, 
+  updateProduct, 
+  deleteProduct, 
+  getProducts,
+  checkProductUsage
+};

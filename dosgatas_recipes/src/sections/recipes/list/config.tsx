@@ -9,7 +9,7 @@ export type DataType = {
   description: string;
 }
 
-export const columns: TableProps<DataType>['columns'] = [
+export const columns = (onRefresh: () => Promise<void>): TableProps<DataType>['columns'] => [
   {
     title: 'Nombre',
     dataIndex: 'name',
@@ -24,22 +24,25 @@ export const columns: TableProps<DataType>['columns'] = [
     title: 'Acciones',
     key: 'action',
     render: (_, record) => (
-      <Options id={record.key} />
+      <Options id={record.key} onRefresh={onRefresh} />
     ),
   }
 ];
 
-const Options: React.FC<{ id: number }> = ({ id }) => {
+const Options: React.FC<{ 
+  id: number; 
+  onRefresh: () => Promise<void>;
+}> = ({ id, onRefresh }) => {
   const navigationDispatch = useNavigationDispatch();
   const [messageApi, contextHolder] = message.useMessage();
 
   const handleDelete = async () => {
     try {
       await deleteRecipe(id);
-      messageApi.success('Receta eliminada correctamente');
-      navigationDispatch({ route: 'listRecipe' }); // Navigate to the list view again
+      await messageApi.success('Receta eliminada correctamente');  // Wait for message
+      await onRefresh();  // Then refresh
     } catch (error) {
-      messageApi.error('Error al eliminar la receta');
+      await messageApi.error('Error al eliminar la receta');
     }
   };
 
