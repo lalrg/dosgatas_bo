@@ -10,7 +10,7 @@ import { useNavigation, useNavigationDispatch } from '../../../shared/context/Na
 
 const CreateRecipe: React.FC = () => {
   const [products, setProducts] = useState<DataType[]>([]);
-  const [recipe, setRecipe] = useState<any>(null);
+  const [_, setRecipe] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const navigationDispatch = useNavigationDispatch();
@@ -65,7 +65,7 @@ const CreateRecipe: React.FC = () => {
   const [margin, setMargin] = useState<number>(3);
   const [price, cost] = usePriceCalculation(selectedProducts, margin);
 
-  const onValuesChange = (changedFields: any, allFields: any) => {
+  const onValuesChange = (_: any, allFields: any) => {
     if (allFields.products && allFields.products.length > 0) {
       setSelectedProducts(allFields.products as SelectedProduct[]);
     }

@@ -51,7 +51,8 @@ pub fn run() {
             recipeFeatures::get_recipes,
             recipeFeatures::get_single_recipe,
             recipeFeatures::delete_recipe,
-            recipeFeatures::create_recipe
+            recipeFeatures::create_recipe,
+            recipeFeatures::update_recipe,
 
         ])
         .run(tauri::generate_context!())

@@ -26,12 +26,8 @@ const createRecipe = async (recipe: CreateRecipeInput): Promise<Recipe> => {
   return invoke<Recipe>('create_recipe', { input: recipe });
 };
 
-const updateRecipe = async (id: number, recipe: Recipe): Promise<Recipe> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ ...recipe, key: id });
-    }, 500);
-  });
+const updateRecipe = async (id: number, recipe: CreateRecipeInput): Promise<Recipe> => {
+  return invoke<Recipe>('update_recipe', { id, input: recipe });
 };
 
 const deleteRecipe = async (id: number): Promise<void> => {

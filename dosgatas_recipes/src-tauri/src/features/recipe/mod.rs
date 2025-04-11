@@ -9,6 +9,7 @@ use sea_orm::{EntityTrait, RelationTrait, JoinType, Set, QueryOrder};
 use tauri::State;
 use serde::Serialize;
 use serde::Deserialize;
+use sea_orm::TransactionTrait;
 
 use crate::AppState;
 use crate::entities::recipe;
@@ -149,5 +150,51 @@ pub async fn create_recipe(state: State<'_, AppState>, input: CreateRecipeInput)
         key: insert_result.last_insert_id,
         name: input.name,
         description: input.description.unwrap_or_default(),
+    })
+}
+
+#[tauri::command]
+pub async fn update_recipe(state: State<'_, AppState>, id: u32, input: CreateRecipeInput) -> Result<Recipe, String> {
+    let db = state.db.lock().await;
+    
+    // Use transaction to ensure data consistency
+    let txn = db.begin().await.map_err(|err| err.to_string())?;
+
+    // Update recipe
+    let recipe = RecipeEntity::update(recipe::ActiveModel {
+        id: Set(id),
+        name: Set(input.name.clone()),
+        description: Set(input.description.clone()),
+    })
+    .exec(&txn)
+    .await
+    .map_err(|err| err.to_string())?;
+
+    // Delete existing recipe products
+    RecipeProduct::delete_many()
+        .filter(recipe_product::Column::RecipeId.eq(id))
+        .exec(&txn)
+        .await
+        .map_err(|err| err.to_string())?;
+
+    // Create new recipe products
+    let recipe_products = input.products.into_iter().map(|p| recipe_product::ActiveModel {
+        recipe_id: Set(id),
+        product_id: Set(p.key),
+        quantity: Set(p.quantity as u32),
+    });
+
+    RecipeProduct::insert_many(recipe_products)
+        .exec(&txn)
+        .await
+        .map_err(|err| err.to_string())?;
+
+    // Commit transaction
+    txn.commit().await.map_err(|err| err.to_string())?;
+
+    Ok(Recipe {
+        key: recipe.id,
+        name: recipe.name,
+        description: recipe.description.unwrap_or_default(),
     })
 }
