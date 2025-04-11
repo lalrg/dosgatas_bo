@@ -27,10 +27,13 @@ const createProduct = async (product: Product): Promise<Product> => {
 };
 
 const updateProduct = async (id: number, product: Product): Promise<Product> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ ...product, id });
-    }, 500);
+  return invoke<Product>('update_product', { 
+    id,
+    input: {
+      name: product.name,
+      description: product.description,
+      cost: product.cost
+    }
   });
 };
 

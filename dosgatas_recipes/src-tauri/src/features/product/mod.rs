@@ -128,3 +128,25 @@ pub async fn create_product(state: State<'_, AppState>, input: CreateProductInpu
         cost: input.cost,
     })
 }
+
+#[tauri::command]
+pub async fn update_product(state: State<'_, AppState>, id: u32, input: CreateProductInput) -> Result<Product, String> {
+    let db = state.db.lock().await;
+    
+    let product = ProductEntity::update(product::ActiveModel {
+        id: Set(id),
+        name: Set(input.name.clone()),
+        description: Set(input.description.clone()),
+        price: Set(Decimal::from_f32(input.cost).unwrap_or_default()),
+    })
+    .exec(&*db)
+    .await
+    .map_err(|err| err.to_string())?;
+
+    Ok(Product {
+        key: product.id,
+        name: product.name,
+        description: product.description.unwrap_or_default(),
+        cost: product.price.to_f32().unwrap_or_default(),
+    })
+}

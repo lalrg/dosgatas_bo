@@ -18,7 +18,7 @@ const CreateProduct: React.FC = () => {
   const [form] = Form.useForm();
   const navigationDispatch = useNavigationDispatch();
   const navigation = useNavigation();
-
+  
   useEffect(() => {
     if (navigation.id) {
       setIsLoading(true);
@@ -68,6 +68,7 @@ const CreateProduct: React.FC = () => {
       });
       navigationDispatch({ route: 'listProduct' });
     } catch (error) {
+      console.error(error)
       notification.error({
         message: navigation.id ? 'Error al actualizar' : 'Error al crear',
         description: `Ha ocurrido un error al ${navigation.id ? 'actualizar' : 'crear'} el producto.`,
