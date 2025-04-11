@@ -5,11 +5,13 @@ use crate::entities::recipe_product;
 use sea_orm::ColumnTrait;
 use sea_orm::QueryFilter;
 use sea_orm::QuerySelect;
+use sea_orm::{EntityTrait, RelationTrait, JoinType, Set, QueryOrder};
 use tauri::State;
 use serde::Serialize;
-use sea_orm::{EntityTrait, RelationTrait, JoinType};
+use serde::Deserialize;
 
 use crate::AppState;
+use crate::entities::recipe;
 
 #[derive(Serialize)]
 pub struct Recipe {
@@ -32,11 +34,26 @@ pub struct RecipeDetail {
     pub products: Vec<ProductRecipe>
 }
 
+#[derive(Deserialize)]
+pub struct CreateRecipeInput {
+    pub name: String,
+    pub description: Option<String>,
+    pub products: Vec<ProductInput>,
+    // pub margin: Option<f32>,
+}
+
+#[derive(Deserialize)]
+pub struct ProductInput {
+    pub key: u32,
+    pub quantity: f32,
+}
+
 #[tauri::command]
 pub async fn get_recipes(state: State<'_, AppState>) -> Result<Vec<Recipe>, String> {
     let db = state.db.lock().await;
 
     let recipes = RecipeEntity::find()
+        .order_by_desc(recipe::Column::Id) // Add this line for DESC ordering
         .all(&*db)
         .await
         .map_err(|err| err.to_string())?;
@@ -93,7 +110,6 @@ pub async fn delete_recipe(state: State<'_,AppState>, id: u32) -> Result<(), Str
         .await
         .map_err(|err| err.to_string())?;
 
-
     // Delete the recipe
     RecipeEntity::delete_by_id(id)
         .exec(&*db)
@@ -101,4 +117,37 @@ pub async fn delete_recipe(state: State<'_,AppState>, id: u32) -> Result<(), Str
         .map_err(|err| err.to_string())?;
 
     Ok(())
+}
+
+#[tauri::command]
+pub async fn create_recipe(state: State<'_, AppState>, input: CreateRecipeInput) -> Result<Recipe, String> {
+    let db = state.db.lock().await;
+
+    // Create recipe
+    let insert_result = RecipeEntity::insert(recipe::ActiveModel {
+        name: Set(input.name.clone()),
+        description: Set(input.description.clone()),
+        ..Default::default()
+    })
+    .exec(&*db)
+    .await
+    .map_err(|err| err.to_string())?;
+
+    // Create recipe products
+    let recipe_products = input.products.into_iter().map(|p| recipe_product::ActiveModel {
+        recipe_id: Set(insert_result.last_insert_id),
+        product_id: Set(p.key),
+        quantity: Set(p.quantity as u32),
+    });
+
+    RecipeProduct::insert_many(recipe_products)
+        .exec(&*db)
+        .await
+        .map_err(|err| err.to_string())?;
+
+    Ok(Recipe {
+        key: insert_result.last_insert_id,
+        name: input.name,
+        description: input.description.unwrap_or_default(),
+    })
 }

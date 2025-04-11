@@ -1,19 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Divider, Form, Input, InputNumber, Row, Space, Statistic, message, Spin } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Col, Divider, Form, Input, InputNumber, Row, Space, Statistic, message, Spin, notification } from 'antd';
 import { IngredientRow, ProductsList } from '../components/IngredientRow';
 import { SelectedProduct, usePriceCalculation } from '../hooks/usePriceCalculation';
 import { DataType } from '../../products/list/config';
 import { getProducts } from '../../../api/product';
-import { getRecipe, createRecipe, updateRecipe } from '../../../api/recipe';
+import { getRecipe, createRecipe, CreateRecipeInput } from '../../../api/recipe';
 import { useNavigation, useNavigationDispatch } from '../../../shared/context/NavigationContext';
 
 const CreateRecipe: React.FC = () => {
   const [products, setProducts] = useState<DataType[]>([]);
   const [recipe, setRecipe] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const navigationDispatch = useNavigationDispatch();
   const navigation = useNavigation();
@@ -39,10 +37,10 @@ const CreateRecipe: React.FC = () => {
               key: product.key,
               quantity: product.quantity
             })),
-            margin: recipe.margin || 3 // Set the margin value from the recipe or default to 3
+            margin: recipe.margin || 3
           });
           setSelectedProducts(recipe.products || []);
-          setMargin(recipe.margin || 3); // Set the margin value from the recipe or default to 3
+          setMargin(recipe.margin || 3);
           setIsLoading(false);
         })
         .catch(() => {
@@ -51,8 +49,8 @@ const CreateRecipe: React.FC = () => {
         });
     } else {
       form.resetFields();
-      setSelectedProducts([]); // Reset the selected products
-      setMargin(3); // Reset the margin to the default value
+      setSelectedProducts([]);
+      setMargin(3);
     }
   }, [navigation.id, form, messageApi]);
 
@@ -74,34 +72,60 @@ const CreateRecipe: React.FC = () => {
     setMargin(allFields.margin);
   };
 
-  useEffect(() => {
-    if (isSubmitted) {
-      if (isSuccess) {
-        messageApi.success(navigation.id ? 'Receta actualizada correctamente' : 'Receta creada correctamente');
-        setTimeout(() => {
-          navigationDispatch({ route: 'listRecipe' });
-        }, 1500);
-      } else {
-        messageApi.error(navigation.id ? 'Error al actualizar la receta' : 'Error al crear la receta');
-      }
-      setIsLoading(false);
-      setIsSubmitted(false);
-    }
-  }, [isSuccess, isSubmitted, messageApi, navigationDispatch, navigation.id]);
-
-  const onFinish = async (values: any) => {
-    setIsLoading(true);
+  const onFinish = async ({ name, description, products, margin }: any) => {
     try {
-      if (navigation.id) {
-        await updateRecipe(navigation.id, values);
-      } else {
-        await createRecipe(values);
+      setIsLoading(true);
+      
+      if (!products || products.length === 0) {
+        notification.warning({
+          message: 'No se puede crear la receta',
+          description: 'Debe agregar al menos un producto a la receta.',
+          placement: 'top',
+          duration: 0,
+          closeIcon: false,
+          btn: (
+            <Button type="primary" onClick={() => notification.destroy()}>
+              Entendido
+            </Button>
+          ),
+        });
+        return;
       }
-      setIsSuccess(true);
+
+      const input: CreateRecipeInput = {
+        name,
+        description,
+        products: products.map((p: any) => ({
+          key: p.key,
+          quantity: p.quantity
+        })),
+        margin
+      };
+
+      await createRecipe(input);
+      notification.success({
+        message: 'Receta creada correctamente',
+        description: `La receta "${name}" ha sido creada con éxito.`,
+        placement: 'top',
+        duration: 3,
+      });
+      navigationDispatch({ route: 'listRecipe' });
     } catch (error) {
-      setIsSuccess(false);
+      notification.error({
+        message: 'Error al crear la receta',
+        description: 'Ha ocurrido un error al intentar crear la receta.',
+        placement: 'top',
+        duration: 0,
+        closeIcon: false,
+        btn: (
+          <Button type="primary" onClick={() => notification.destroy()}>
+            Entendido
+          </Button>
+        ),
+      });
+    } finally {
+      setIsLoading(false);
     }
-    setIsSubmitted(true);
   };
 
   return (

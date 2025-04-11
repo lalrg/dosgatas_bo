@@ -8,16 +8,22 @@ export type Recipe = {
   products?: { key: number; quantity: number }[];
 };
 
+export type CreateRecipeInput = {
+  name: string;
+  description?: string;
+  products: Array<{
+    key: number;
+    quantity: number;
+  }>;
+  margin?: number;
+};
+
 const getRecipe = async (id: number): Promise<Recipe> => {
   return invoke<Recipe>('get_single_recipe', { id });
 };
 
-const createRecipe = async (recipe: Recipe): Promise<Recipe> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ ...recipe, key: Math.floor(Math.random() * 1000) });
-    }, 500);
-  });
+const createRecipe = async (recipe: CreateRecipeInput): Promise<Recipe> => {
+  return invoke<Recipe>('create_recipe', { input: recipe });
 };
 
 const updateRecipe = async (id: number, recipe: Recipe): Promise<Recipe> => {
