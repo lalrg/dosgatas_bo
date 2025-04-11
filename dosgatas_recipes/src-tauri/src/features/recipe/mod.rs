@@ -53,7 +53,7 @@ pub async fn get_recipes(state: State<'_, AppState>) -> Result<Vec<Recipe>, Stri
     let db = state.db.lock().await;
 
     let recipes = RecipeEntity::find()
-        .order_by_desc(recipe::Column::Id) // Add this line for DESC ordering
+        .order_by_desc(recipe::Column::Id)
         .all(&*db)
         .await
         .map_err(|err| err.to_string())?;

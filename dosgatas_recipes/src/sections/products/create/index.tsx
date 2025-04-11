@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import type { FormProps } from 'antd';
-import { Button, InputNumber, Form, Input, Row, Col, message, Spin } from 'antd';
+import { Button, InputNumber, Form, Input, Row, Col, message, Spin, notification } from 'antd';
 import { useNavigation, useNavigationDispatch } from '../../../shared/context/NavigationContext';
 import { getProduct, createProduct, updateProduct, Product } from '../../../api/product';
 
@@ -52,18 +52,37 @@ const CreateProduct: React.FC = () => {
   }, [isSuccess, isSubmitted, messageApi, navigationDispatch, navigation.id]);
 
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-    setIsLoading(true);
     try {
+      setIsLoading(true);
       if (navigation.id) {
         await updateProduct(navigation.id, values as Product);
       } else {
         await createProduct(values as Product);
       }
-      setIsSuccess(true);
+      
+      notification.success({
+        message: navigation.id ? 'Producto actualizado' : 'Producto creado',
+        description: `El producto "${values.name}" ha sido ${navigation.id ? 'actualizado' : 'creado'} correctamente.`,
+        placement: 'top',
+        duration: 3,
+      });
+      navigationDispatch({ route: 'listProduct' });
     } catch (error) {
-      setIsSuccess(false);
+      notification.error({
+        message: navigation.id ? 'Error al actualizar' : 'Error al crear',
+        description: `Ha ocurrido un error al ${navigation.id ? 'actualizar' : 'crear'} el producto.`,
+        placement: 'top',
+        duration: 0,
+        closeIcon: false,
+        btn: (
+          <Button type="primary" onClick={() => notification.destroy()}>
+            Entendido
+          </Button>
+        ),
+      });
+    } finally {
+      setIsLoading(false);
     }
-    setIsSubmitted(true);
   };
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {

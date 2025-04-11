@@ -17,10 +17,12 @@ const getProduct = async (id: number): Promise<Product> => {
 };
 
 const createProduct = async (product: Product): Promise<Product> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(product);
-    }, 500);
+  return invoke<Product>('create_product', { 
+    input: {
+      name: product.name,
+      description: product.description,
+      cost: product.cost
+    }
   });
 };
 

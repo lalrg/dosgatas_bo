@@ -45,6 +45,7 @@ pub fn run() {
             productFeatures::get_single_product,
             productFeatures::delete_product,
             productFeatures::product_is_in_recipes,
+            productFeatures::create_product,
 
             recipeFeatures::get_recipes,
             recipeFeatures::get_single_recipe,

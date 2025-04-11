@@ -1,12 +1,14 @@
-import { MinusCircleOutlined } from "@ant-design/icons";
-import { Form, InputNumber, Select, Space } from "antd";
+import React from 'react';
+import { Form, InputNumber, Select, Space } from 'antd';
+import { MinusCircleOutlined } from '@ant-design/icons';
 
-export type IngredientRowProps = {
+export interface IngredientRow {
   name: number;
-  restField: any;
   productsList: ProductsList[];
-  remove: (index: number | number[]) => void;
-};
+  restField: any;
+  remove: (name: number) => void;
+  add?: () => void;  // New prop
+}
 
 export type ProductsList = {
   label: string;
@@ -14,34 +16,50 @@ export type ProductsList = {
   cost: number;
 };
 
-export const IngredientRow: React.FC<IngredientRowProps> = ({
-  name,
-  restField,
-  productsList,
+export const IngredientRow: React.FC<IngredientRow> = ({ 
+  name, 
+  productsList, 
+  restField, 
   remove,
+  add 
 }) => {
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      add?.();
+    }
+  };
+
   return (
     <Space key={name} style={{ display: "flex", marginBottom: 8 }} align="baseline">
       <Form.Item
         {...restField}
         name={[name, "key"]}
         label="Producto"
-        rules={[{ required: true, message: "Nombre del producto" }]}
+        rules={[{ required: true, message: 'Falta el producto' }]}
       >
         <Select
           showSearch
-          optionFilterProp="label"
+          placeholder="Seleccionar producto"
           style={{ width: 250 }}
           options={productsList}
+          onKeyDown={handleKeyPress}
+          filterOption={(input, option) =>
+            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+          }
         />
       </Form.Item>
       <Form.Item
         {...restField}
         label="Cantidad"
-        name={[name, "quantity"]}
-        rules={[{ required: true, message: "Cantidad del producto" }]}
+        name={[name, 'quantity']}
+        rules={[{ required: true, message: 'Falta la cantidad' }]}
       >
-        <InputNumber placeholder="Cantidad" />
+        <InputNumber 
+          min={1} 
+          placeholder="Cantidad"
+          onKeyDown={handleKeyPress}
+        />
       </Form.Item>
       <MinusCircleOutlined onClick={() => remove(name)} />
     </Space>

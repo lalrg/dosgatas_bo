@@ -141,6 +141,11 @@ const CreateRecipe: React.FC = () => {
           initialValues={{
             margin: 3
           }}
+          onKeyUp={e => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+            }
+          }}
         >
           <Row align={"middle"} justify={"center"}>
             <Col>
@@ -172,7 +177,14 @@ const CreateRecipe: React.FC = () => {
               {(fields, { add, remove }) => (
                 <>
                   {fields.map(({ key, name, ...restField }) => (
-                    <IngredientRow key={key} name={name} productsList={productsList} restField={restField} remove={remove} />
+                    <IngredientRow 
+                      key={key} 
+                      name={name} 
+                      productsList={productsList} 
+                      restField={restField} 
+                      remove={remove}
+                      add={add}  // Pass add function
+                    />
                   ))}
                   <Form.Item>
                     <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
@@ -185,13 +197,25 @@ const CreateRecipe: React.FC = () => {
             <Divider />
             <Row style={{ width: "100%" }} justify={"center"} align={"middle"} gutter={[16, 16]}>
               <Col>
-                <Statistic title="Precio actual" value={price} />
+                <Statistic 
+                  title="Precio actual" 
+                  value={price} 
+                  precision={2}
+                />
               </Col>
               <Col>
-                <Statistic title="Costo" value={cost} />
+                <Statistic 
+                  title="Costo" 
+                  value={cost} 
+                  precision={2}
+                />
               </Col>
               <Col>
-                <Statistic title="Ganancia" value={price - cost} />
+                <Statistic 
+                  title="Ganancia" 
+                  value={Number((price - cost).toFixed(2))} 
+                  precision={2}
+                />
               </Col>
             </Row>
             <Divider />
