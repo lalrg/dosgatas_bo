@@ -86,7 +86,8 @@ const CreateProduct: React.FC = () => {
     }
   };
 
-  const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+  const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (error) => {
+    console.error(error);
     setIsSuccess(false);
     setIsSubmitted(true);
   };

@@ -1,4 +1,4 @@
-import React, { JSX, useState } from 'react';
+import React, { JSX } from 'react';
 import { CoffeeOutlined, PieChartOutlined, PlusOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';

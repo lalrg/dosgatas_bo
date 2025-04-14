@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "dosgatas_recipes",
+  "productName": "Dos Gatas Recipes",
   "version": "0.1.0",
-  "identifier": "com.dosgatas_recipes.app",
+  "identifier": "com.dosgatas.recipes",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,19 +12,51 @@
   "app": {
     "windows": [
       {
-        "title": "dosgatas_recipes",
+        "title": "Dos Gatas Recipes",
         "width": 1200,
-        "height": 720
+        "height": 720,
+        "resizable": true,
+        "fullscreen": false,
+        "center": true,
+        "devtools": true
       }
     ],
     "security": {
-      "csp": null
+      "csp": null,
+      "capabilities": [
+        {
+          "identifier": "default",
+          "permissions": [
+            "core:default",
+            "core:app:default",
+            "core:path:default",
+            "core:window:default",
+            "core:resources:default",
+            "core:menu:default",
+            "core:tray:default",
+            "core:webview:default",
+            "opener:default"
+          ],
+          "platforms": ["linux", "macOS", "windows"],
+          "scope": {
+            "core:path": {
+              "allow": [
+                "$APPDATA/**/*",
+                "$APPCONFIG/**/*",
+                "$APPCACHE/**/*",
+                "$RESOURCE/*",
+                "$LOCALDATA/*"
+              ]
+            }
+          }
+        }
+      ]
     },
     "withGlobalTauri": true
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["dmg"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
